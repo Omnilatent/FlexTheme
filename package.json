@@ -1,0 +1,14 @@
+{
+    "name": "com.omnilatent.flextheme",
+    "displayName": "Flex Theme Manager",
+    "version": "0.1.0",
+    "unity": "2018.1",
+    "description": "Flex Theme Manager allow changing game's theme in runtime.",
+    "keywords": ["theme", "ui"],
+    "category": "Graphic",
+    "author": {
+        "name": "Trong",
+        "email": "nguyentrong101094@gmail.com",
+        "url": "https://github.com/nguyentrong101094"
+  }
+}
