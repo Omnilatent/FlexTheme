@@ -4,18 +4,6 @@ using UnityEngine;
 
 namespace Omnilatent.FlexTheme
 {
-    [System.Serializable]
-    public class GameObjectThemeMatcher
-    {
-        [SerializeField] ThemeAssetCollection theme;
-        //[SerializeField] GameObject themeGameObject;
-        [SerializeField] List<GameObject> themeGameObjects;
-
-        public ThemeAssetCollection Theme { get => theme; set => theme = value; }
-        //public GameObject ThemeGameObject { get => themeGameObject; set => themeGameObject = value; }
-        public List<GameObject> ThemeGameObjects { get => themeGameObjects; set => themeGameObjects = value; }
-    }
-
     [UnityEngine.Scripting.APIUpdating.MovedFrom(false, "Omnilatent.FlexTheme", null, "GameObjectThemeMatcher")]
     [System.Serializable]
     public class GameObjectThemeProperty
