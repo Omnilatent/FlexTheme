@@ -6,7 +6,7 @@ namespace Omnilatent.FlexTheme
 {
     public class ThemePropertyBase
     {
-        [SerializeField] ThemeAssetCollection theme;
+        [SerializeField] protected ThemeAssetCollection theme;
         public ThemeAssetCollection Theme { get => theme; set => theme = value; }
     }
 

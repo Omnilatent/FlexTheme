@@ -6,6 +6,9 @@ using UnityEngine.U2D;
 
 namespace Omnilatent.FlexTheme
 {
+    /// <summary>
+    /// Represent the theme as a scriptable object. Handle loading & references to assets related to that theme.
+    /// </summary>
     [CreateAssetMenu(fileName = "Theme", menuName = "Theme Asset")]
     public class ThemeAssetCollection : ScriptableObject
     {
