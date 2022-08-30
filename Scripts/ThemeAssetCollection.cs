@@ -31,6 +31,11 @@ namespace Omnilatent.FlexTheme
             return ThemeManager.Instance.LoadObject(Path.Combine(spriteAtlasPath, this.name, atlasName)) as SpriteAtlas;
         }
 
+        public string GetSceneName(string defaultSceneName)
+        {
+            return $"{defaultSceneName}_{this.name}";
+        }
+
         public override bool Equals(object other)
         {
             return base.Equals(other);
