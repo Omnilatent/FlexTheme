@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ namespace Omnilatent.FlexTheme.Editor
         static ThemeAssetCollection theme;
         public const string menuPath = "Tools/Flex Theme/";
         const string menuPathShowWindow = menuPath + "Switch Theme (debug)";
+        const string menuPathImportExtra = menuPath + "Import Extra Package";
+        static bool savePreference;
 
         static void Init()
         {
@@ -63,11 +66,39 @@ namespace Omnilatent.FlexTheme.Editor
         private void OnGUI()
         {
             theme = EditorGUILayout.ObjectField(theme, typeof(ThemeAssetCollection), true) as ThemeAssetCollection;
+            savePreference = EditorGUILayout.Toggle("Save Preference", savePreference);
             if (theme != null && ThemeManager.CurrentTheme != theme)
             {
                 Debug.Log("[Debug] Updating all Themed component with new theme.");
                 ThemeManager.SetTheme(theme.name, true);
+                if (savePreference) { ThemeManager.SavePreference(); }
             }
+        }
+
+        [MenuItem(menuPathImportExtra, priority = 0)]
+        public static void ImportExtra()
+        {
+            string path = GetPackagePath("Assets/Omnilatent/FlexTheme/FlexThemeExtra.unitypackage", "FlexThemeExtra");
+            AssetDatabase.ImportPackage(path, true);
+        }
+
+        static string GetPackagePath(string path, string filename)
+        {
+            if (!File.Exists($"{Application.dataPath}/../{path}"))
+            {
+                Debug.Log($"{filename} not found at {path}, attempting to search whole project for {filename}");
+                string[] guids = AssetDatabase.FindAssets($"{filename} l:package");
+                if (guids.Length > 0)
+                {
+                    path = AssetDatabase.GUIDToAssetPath(guids[0]);
+                }
+                else
+                {
+                    Debug.LogError($"{filename} not found at {Application.dataPath}/../{path}");
+                    return null;
+                }
+            }
+            return path;
         }
     }
 }
