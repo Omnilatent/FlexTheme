@@ -46,7 +46,7 @@ namespace Omnilatent.FlexTheme
                 return;
             }
 
-            string preferredTheme = PlayerPrefs.GetString(prefKeyCurrentTheme, null);
+            string preferredTheme = LoadPrefCurrentThemeName();
             if (!string.IsNullOrEmpty(preferredTheme))
             {
                 SetTheme(preferredTheme);
@@ -57,8 +57,17 @@ namespace Omnilatent.FlexTheme
             }
         }
 
-        public static void SetTheme(string themeId = "default", bool updateExistingThemedObject = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="themeId">If null, theme will be set to default theme</param>
+        /// <param name="updateExistingThemedObject"></param>
+        public static void SetTheme(string themeId, bool updateExistingThemedObject = false)
         {
+            if(string.IsNullOrEmpty(themeId))
+            {
+                themeId = DefaultTheme.name;
+            }
             Instance.currentThemeAsset = GetTheme(themeId);
             if (updateExistingThemedObject)
             {
@@ -86,6 +95,11 @@ namespace Omnilatent.FlexTheme
         {
             PlayerPrefs.SetString(prefKeyCurrentTheme, CurrentTheme.name);
             PlayerPrefs.Save();
+        }
+
+        public static string LoadPrefCurrentThemeName()
+        {
+            return PlayerPrefs.GetString(prefKeyCurrentTheme, null);
         }
 
         public Object LoadObject(string path)
