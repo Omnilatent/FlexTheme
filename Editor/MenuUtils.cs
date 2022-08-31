@@ -65,14 +65,23 @@ namespace Omnilatent.FlexTheme.Editor
 
         private void OnGUI()
         {
-            theme = EditorGUILayout.ObjectField(theme, typeof(ThemeAssetCollection), true) as ThemeAssetCollection;
             savePreference = EditorGUILayout.Toggle("Save Preference", savePreference);
+            theme = EditorGUILayout.ObjectField(theme, typeof(ThemeAssetCollection), true) as ThemeAssetCollection;
             if (theme != null && ThemeManager.CurrentTheme != theme)
             {
-                Debug.Log("[Debug] Updating all Themed component with new theme.");
-                ThemeManager.SetTheme(theme.name, true);
-                if (savePreference) { ThemeManager.SavePreference(); }
+                SetTheme();
             }
+            if (GUILayout.Button("Set manually"))
+            {
+                SetTheme();
+            }
+        }
+
+        void SetTheme()
+        {
+            Debug.Log("[Debug] Updating all Themed component with new theme.");
+            ThemeManager.SetTheme(theme.name, true);
+            if (savePreference) { ThemeManager.SavePreference(); }
         }
 
         [MenuItem(menuPathImportExtra, priority = 0)]
