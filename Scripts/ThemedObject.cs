@@ -21,11 +21,24 @@ namespace Omnilatent.FlexTheme
     {
         [SerializeField] List<GameObjectThemeProperty> themeObjectsData;
 
-        // Start is called before the first frame update
-        void Start()
+        [Tooltip("If true, this component will not set active any objects, it will only handle reference to current theme's objects.")]
+        [SerializeField] bool referenceOnly;
+
+        GameObjectThemeProperty currentThemeObjectData = null;
+        bool initialized = false;
+
+        private void Awake()
         {
+            Init();
+        }
+
+        // Start is called before the first frame update
+        void Init()
+        {
+            if (initialized) return;
             bool hasCurrentThemeData = false;
             GameObjectThemeProperty defaultThemeObjectData = null;
+
             //var defaultThemeObjectData = themeObjectsData.Find(x => x.Equals(ThemeManager.DefaultTheme));
             for (int i = 0; i < themeObjectsData.Count; i++)
             {
@@ -48,15 +61,26 @@ namespace Omnilatent.FlexTheme
 
             //disable default object if this object has data for the current theme and vice versa
             if (defaultThemeObjectData != null)
+            {
                 ToggleThemeGameObject(defaultThemeObjectData, !hasCurrentThemeData);
+            }
+            initialized = true;
         }
 
         private void ToggleThemeGameObject(GameObjectThemeProperty gameObjectThemeMatcher, bool active)
         {
+            if (active) { currentThemeObjectData = gameObjectThemeMatcher; }
+            if (referenceOnly) { return; }
             foreach (var item in gameObjectThemeMatcher.ThemeGameObjects)
             {
                 item.SetActive(active);
             }
+        }
+
+        public List<GameObject> GetCurrentGameObjects()
+        {
+            Init();
+            return currentThemeObjectData.ThemeGameObjects;
         }
 
         /*private void Reset()

@@ -29,4 +29,20 @@ namespace Omnilatent.FlexTheme
 
         public Object Asset { get => asset; set => asset = value; }
     }
+
+    public class GenericThemeProperty<T> : ThemePropertyBase
+    {
+        T data;
+        public T Data { get => data; set => data = value; }
+
+        public GenericThemeProperty()
+        {
+        }
+
+        public GenericThemeProperty(ThemeAssetCollection theme, T data)
+        {
+            this.Theme = theme;
+            this.data = data;
+        }
+    }
 }
