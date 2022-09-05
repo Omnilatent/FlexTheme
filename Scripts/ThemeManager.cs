@@ -64,11 +64,14 @@ namespace Omnilatent.FlexTheme
         /// <param name="updateExistingThemedObject"></param>
         public static void SetTheme(string themeId, bool updateExistingThemedObject = false)
         {
-            if(string.IsNullOrEmpty(themeId))
+            if (string.IsNullOrEmpty(themeId))
             {
                 themeId = DefaultTheme.name;
             }
-            Instance.currentThemeAsset = GetTheme(themeId);
+            if (Application.isPlaying)
+            {
+                Instance.currentThemeAsset = GetTheme(themeId);
+            }
             if (updateExistingThemedObject)
             {
                 var themedItems = MonoBehaviour.FindObjectsOfType<ThemedItemBase>();

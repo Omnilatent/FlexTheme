@@ -41,7 +41,7 @@ namespace Omnilatent.FlexTheme.Editor
                 Init();
         }
 
-        static MenuUtils GetWindow() { return (MenuUtils)EditorWindow.GetWindow(typeof(MenuUtils)); }
+        static MenuUtils GetWindow() { return (MenuUtils)EditorWindow.GetWindow(typeof(MenuUtils), false, title: "Flex Theme Switcher"); }
 
         private static void OnPlayModeStateChanged(PlayModeStateChange mode)
         {
@@ -65,6 +65,11 @@ namespace Omnilatent.FlexTheme.Editor
 
         private void OnGUI()
         {
+            if (!Application.isPlaying)
+            {
+                EditorGUILayout.LabelField("Enter Play Mode to use this feature.");
+                return;
+            }
             savePreference = EditorGUILayout.Toggle("Save Preference", savePreference);
             theme = EditorGUILayout.ObjectField(theme, typeof(ThemeAssetCollection), true) as ThemeAssetCollection;
             if (theme != null && ThemeManager.CurrentTheme != theme)
