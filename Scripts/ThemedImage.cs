@@ -64,6 +64,7 @@ namespace Omnilatent.FlexTheme
             base.CopyCurrentValue(targetTheme);
 
             ImageThemeProperty targetProperty;
+            if (customImageProperties == null) { customImageProperties = new List<ImageThemeProperty>(); }
             targetProperty = customImageProperties.Find(property => property.Theme == targetTheme);
             if (targetProperty == null)
             {
