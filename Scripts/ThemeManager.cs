@@ -27,6 +27,11 @@ namespace Omnilatent.FlexTheme
                 if (instance == null)
                 {
                     GameObject prefab = Resources.Load<GameObject>("ThemeManager");
+                    if (!Application.isPlaying)
+                    {
+                        Debug.Log("Getting instance in edit mode will return the prefab.");
+                        return prefab.GetComponent<ThemeManager>();
+                    }
                     instance = Instantiate(prefab).GetComponent<ThemeManager>();
                 }
                 return instance;

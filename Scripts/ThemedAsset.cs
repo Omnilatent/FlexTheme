@@ -4,12 +4,6 @@ using UnityEngine;
 
 namespace Omnilatent.FlexTheme
 {
-    public class ThemePropertyBase
-    {
-        [SerializeField] protected ThemeAssetCollection theme;
-        public ThemeAssetCollection Theme { get => theme; set => theme = value; }
-    }
-
     [System.Serializable]
     public class ThemedAsset
     {

@@ -10,14 +10,8 @@ namespace Omnilatent.FlexTheme
     /// For use when there are sprite with same filename.
     /// </summary>
     [System.Serializable]
-    public class ImageThemeProperty
+    public class ImageThemeProperty : UIThemeProperty
     {
-        [SerializeField] ThemeAssetCollection theme;
-        [SerializeField] Vector2 anchoredPosition;
-
-        public ThemeAssetCollection Theme { get => theme; set => theme = value; }
-        public Vector2 AnchoredPosition { get => anchoredPosition; set => anchoredPosition = value; }
-
         public ImageThemeChangeEvent imageThemeChangeEvent;
         public void InvokeEvent()
         {
@@ -70,6 +64,15 @@ namespace Omnilatent.FlexTheme
         void Reset()
         {
             m_Image = GetComponent<Image>();
+            if (m_Image != null)
+            {
+                customImageProperties = new List<ImageThemeProperty>();
+                customImageProperties.Add(new ImageThemeProperty()
+                {
+                    Theme = ThemeManager.DefaultTheme,
+                    AnchoredPosition = m_Image.rectTransform.anchoredPosition,
+                });
+            }
         }
     }
 }
