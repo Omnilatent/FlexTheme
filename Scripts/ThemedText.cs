@@ -22,11 +22,6 @@ namespace Omnilatent.FlexTheme
         [SerializeField] protected List<TextThemeProperty> customProperties;
         RectTransform GetRect() => transform as RectTransform;
 
-        private void Start()
-        {
-            OnThemeChanged();
-        }
-
         public override void OnThemeChanged()
         {
             base.OnThemeChanged();
@@ -42,10 +37,27 @@ namespace Omnilatent.FlexTheme
             }
         }
 
+        public override void CopyCurrentValue(ThemeAssetCollection targetTheme)
+        {
+            base.CopyCurrentValue(targetTheme);
+            TextThemeProperty targetProperty;
+            targetProperty = customProperties.Find(property => property.Theme == targetTheme);
+            if (targetProperty == null)
+            {
+                targetProperty = new TextThemeProperty()
+                {
+                    Theme = targetTheme,
+                };
+                customProperties.Add(targetProperty);
+            }
+            targetProperty.AnchoredPosition = m_Text.rectTransform.anchoredPosition;
+            targetProperty.Color = m_Text.color;
+        }
+
         private void Reset()
         {
             m_Text = GetComponent<TMP_Text>();
-            if (m_Text != null)
+            /*if (m_Text != null)
             {
                 customProperties = new List<TextThemeProperty>();
                 customProperties.Add(new TextThemeProperty()
@@ -54,7 +66,7 @@ namespace Omnilatent.FlexTheme
                     AnchoredPosition = m_Text.rectTransform.anchoredPosition,
                     Color = m_Text.color
                 });
-            }
+            }*/
         }
     }
 }

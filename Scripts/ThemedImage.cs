@@ -26,23 +26,22 @@ namespace Omnilatent.FlexTheme
         [SerializeField] bool setNativeSizeOnChange = true;
         [SerializeField] Image m_Image;
         [SerializeField] List<ImageThemeProperty> customImageProperties;
+        protected string originalImageFileName;
         //[SerializeField] ThemeAssetCollection debugCurrentTheme; //for debug
 
         RectTransform GetRect() => transform as RectTransform;
 
-        // Start is called before the first frame update
-        void Start()
+        protected override void Initialize()
         {
-            OnThemeChanged();
+            originalImageFileName = m_Image.sprite.name;
+            base.Initialize();
         }
 
         public override void OnThemeChanged()
         {
             base.OnThemeChanged();
-            string imageFileName = m_Image.sprite.name;
-
             //debugCurrentTheme = ThemeManager.CurrentTheme;
-            var spr = ThemeManager.CurrentTheme.GetImage(imageFileName);
+            var spr = ThemeManager.CurrentTheme.GetImage(originalImageFileName);
             if (spr != null)
             {
                 m_Image.sprite = spr;
@@ -60,11 +59,28 @@ namespace Omnilatent.FlexTheme
             }
         }
 
+        public override void CopyCurrentValue(ThemeAssetCollection targetTheme)
+        {
+            base.CopyCurrentValue(targetTheme);
+
+            ImageThemeProperty targetProperty;
+            targetProperty = customImageProperties.Find(property => property.Theme == targetTheme);
+            if (targetProperty == null)
+            {
+                targetProperty = new ImageThemeProperty()
+                {
+                    Theme = targetTheme,
+                };
+                customImageProperties.Add(targetProperty);
+            }
+            targetProperty.AnchoredPosition = m_Image.rectTransform.anchoredPosition;
+        }
+
         // Update is called once per frame
         void Reset()
         {
             m_Image = GetComponent<Image>();
-            if (m_Image != null)
+            /*if (m_Image != null)
             {
                 customImageProperties = new List<ImageThemeProperty>();
                 customImageProperties.Add(new ImageThemeProperty()
@@ -72,7 +88,7 @@ namespace Omnilatent.FlexTheme
                     Theme = ThemeManager.DefaultTheme,
                     AnchoredPosition = m_Image.rectTransform.anchoredPosition,
                 });
-            }
+            }*/
         }
     }
 }

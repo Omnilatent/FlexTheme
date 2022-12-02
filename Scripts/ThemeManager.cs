@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -10,13 +11,44 @@ namespace Omnilatent.FlexTheme
     {
         [SerializeField] List<string> themeAssetIds;
         [SerializeField] ThemeAssetCollection defaultTheme;
+
+        [System.Flags]
+        public enum AppEnvironment
+        {
+            None = 0,
+            EditorOnly = 1,
+            PlayerOnly = 2,
+            Both = EditorOnly | PlayerOnly
+        }
+        [Tooltip("When Themed Item is initialized, add listener to theme change event.")]
+        [SerializeField] private AppEnvironment themedItemsListenEventEnvironment = AppEnvironment.EditorOnly;
+
         public const string themeAssetPath = "Themes";
         ThemeAssetCollection currentThemeAsset = null;
         public static ThemeAssetCollection DefaultTheme { get => Instance.defaultTheme; }
         public static ThemeAssetCollection CurrentTheme { get => Instance.currentThemeAsset; }
-        Dictionary<string, Object> loadedObjectsCache = new Dictionary<string, Object>();
+        Dictionary<string, UnityEngine.Object> loadedObjectsCache = new Dictionary<string, UnityEngine.Object>();
 
         public static string prefKeyCurrentTheme = "FlexTheme_CurrentTheme";
+
+        public bool ThemedItemsListenToThemeChange
+        {
+            get
+            {
+                if (themedItemsListenEventEnvironment == AppEnvironment.None) { return false; }
+                else if (themedItemsListenEventEnvironment == AppEnvironment.Both) { return true; }
+                if (themedItemsListenEventEnvironment.HasFlag(AppEnvironment.EditorOnly) && Application.isEditor)
+                {
+                    return true;
+                }
+                if (themedItemsListenEventEnvironment == AppEnvironment.PlayerOnly)
+                {
+                    return !Application.isEditor;
+                }
+                return true;
+            }
+        }
+        public Action<ThemeAssetCollection> OnThemeChange;
 
         static ThemeManager instance;
 
@@ -84,6 +116,7 @@ namespace Omnilatent.FlexTheme
                 {
                     item.OnThemeChanged();
                 }
+                Instance.OnThemeChange?.Invoke(Instance.currentThemeAsset);
             }
         }
 
@@ -110,13 +143,13 @@ namespace Omnilatent.FlexTheme
             return PlayerPrefs.GetString(prefKeyCurrentTheme, null);
         }
 
-        public Object LoadObject(string path)
+        public UnityEngine.Object LoadObject(string path)
         {
             if (loadedObjectsCache.TryGetValue(path, out var cachedObj))
             {
                 return cachedObj;
             }
-            var loadObj = Resources.Load<Object>(path);
+            var loadObj = Resources.Load<UnityEngine.Object>(path);
             loadedObjectsCache.Add(path, loadObj);
             Debug.Log($"Loaded {path}: {loadObj}");
             return loadObj;
