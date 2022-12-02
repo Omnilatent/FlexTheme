@@ -41,6 +41,7 @@ namespace Omnilatent.FlexTheme
         {
             base.CopyCurrentValue(targetTheme);
             TextThemeProperty targetProperty;
+            if (customProperties == null) { customProperties = new List<TextThemeProperty>(); }
             targetProperty = customProperties.Find(property => property.Theme == targetTheme);
             if (targetProperty == null)
             {

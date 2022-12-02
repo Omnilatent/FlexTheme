@@ -12,7 +12,12 @@ namespace Omnilatent.FlexTheme
     [System.Serializable]
     public class ImageThemeProperty : UIThemeProperty
     {
+        [Tooltip("If not empty, image will load using this filename instead of the filename in Image component.")]
+        [SerializeField] protected string customImageFileName;
         public ImageThemeChangeEvent imageThemeChangeEvent;
+
+        public string CustomImageFileName { get => customImageFileName; set => customImageFileName = value; }
+
         public void InvokeEvent()
         {
             imageThemeChangeEvent.Invoke(this);
@@ -41,7 +46,25 @@ namespace Omnilatent.FlexTheme
         {
             base.OnThemeChanged();
             //debugCurrentTheme = ThemeManager.CurrentTheme;
-            var spr = ThemeManager.CurrentTheme.GetImage(originalImageFileName);
+
+            string imageFileName = originalImageFileName;
+            var customProperty = customImageProperties.Find(x => x.Theme == ThemeManager.CurrentTheme);
+            if (customProperty != null)
+            {
+                if (!string.IsNullOrEmpty(customProperty.CustomImageFileName)) { imageFileName = customProperty.CustomImageFileName; }
+                LoadSprite(imageFileName);
+                GetRect().anchoredPosition = customProperty.AnchoredPosition;
+                customProperty.InvokeEvent();
+            }
+            else
+            {
+                LoadSprite(imageFileName);
+            }
+        }
+
+        protected void LoadSprite(string filename)
+        {
+            var spr = ThemeManager.CurrentTheme.GetImage(filename);
             if (spr != null)
             {
                 m_Image.sprite = spr;
@@ -49,13 +72,6 @@ namespace Omnilatent.FlexTheme
                 {
                     m_Image.SetNativeSize();
                 }
-            }
-
-            var customProperty = customImageProperties.Find(x => x.Theme == ThemeManager.CurrentTheme);
-            if (customProperty != null)
-            {
-                GetRect().anchoredPosition = customProperty.AnchoredPosition;
-                customProperty.InvokeEvent();
             }
         }
 
