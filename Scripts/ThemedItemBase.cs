@@ -19,6 +19,14 @@ namespace Omnilatent.FlexTheme
 
         public virtual void OnThemeChanged() { }
         public virtual void CopyCurrentValue(ThemeAssetCollection targetTheme) { }
+
+        protected virtual void OnDestroy()
+        {
+            if (ThemeManager.Instance.ThemedItemsListenToThemeChange)
+            {
+                ThemeManager.Instance.OnThemeChange -= OnThemeChanged;
+            }
+        }
     }
 
 }
