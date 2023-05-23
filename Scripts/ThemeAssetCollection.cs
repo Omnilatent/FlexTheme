@@ -12,11 +12,11 @@ namespace Omnilatent.FlexTheme
     [CreateAssetMenu(fileName = "Theme", menuName = "Theme Asset")]
     public class ThemeAssetCollection : ScriptableObject
     {
-        [Tooltip("Path to sprite atlas(es) for this theme. If assigned, will ignore spriteResourcesFolder")]
-        [SerializeField] string[] spriteAtlasPaths;
-        
-        [Tooltip("Parent folder containing sprites of this theme in Resources folder")]
-        [SerializeField] public Object SpriteResourcesFolder;
+        [Tooltip("Path to sprite atlas(es) for this theme. If assigned, will ignore spriteResourcesFolder")] [SerializeField]
+        string[] spriteAtlasPaths;
+
+        [Tooltip("Parent folder containing sprites of this theme in Resources folder")] [SerializeField]
+        public Object SpriteResourcesFolder;
 
         [SerializeField] public List<SpritePath> SpritePaths;
         private Dictionary<string, string> spriteFilenameToPath; //converted from SpritePaths
@@ -25,7 +25,7 @@ namespace Omnilatent.FlexTheme
         {
             get
             {
-                if (spriteFilenameToPath == null && SpritePaths.Count>0)
+                if (spriteFilenameToPath == null && SpritePaths.Count > 0)
                 {
                     spriteFilenameToPath = new Dictionary<string, string>();
                     for (int i = 0; i < SpritePaths.Count; i++)
@@ -35,6 +35,7 @@ namespace Omnilatent.FlexTheme
                             Debug.LogWarning($"There are files with duplicate names at {SpritePaths[i].path}, this will cause wrong sprite to be loaded.");
                             continue;
                         }
+
                         spriteFilenameToPath.Add(SpritePaths[i].spriteName, SpritePaths[i].path);
                     }
                 }
@@ -55,7 +56,7 @@ namespace Omnilatent.FlexTheme
                 this.path = path;
             }
         }
-        
+
         public static readonly string spriteAtlasPath = "ThemedSpriteAtlases";
 
         public Sprite GetImage(string name)
@@ -66,10 +67,11 @@ namespace Omnilatent.FlexTheme
                 if (spr != null) return spr;
             }
 
-            if (SpriteFilenameToPath.TryGetValue(name, out var path))
+            if (SpriteFilenameToPath != null && SpriteFilenameToPath.TryGetValue(name, out var path))
             {
                 return Resources.Load<Sprite>(path);
             }
+
             return null;
         }
 
